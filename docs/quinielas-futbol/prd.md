@@ -236,7 +236,7 @@ file_scope:
   - backend/app/api/auth.py
   - backend/app/api/users.py
   - backend/app/api/wallet.py
-  - backend/app/api/errors.py
+  - backend/app/api/exception_handlers.py
   - backend/app/main.py
   - backend/tests/services/test_wallet.py
   - backend/tests/api/test_auth.py
