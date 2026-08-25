@@ -149,8 +149,8 @@ file_scope:
   - `docs/quinielas-futbol/design/tokens.md` — paleta, tipografía, espaciado, radios, temas claro y oscuro.
   - La URL del canvas publicado, registrada en `docs/quinielas-futbol/design/README.md`.
 - **Definition of Done (DoD):**
-  - [ ] Se cumplieron todos los DoD de `design-prd.md`.
-  - [ ] **Gate humano:** Alex aprobó el canvas. Sin esta aprobación, las Phases 8 y 9 no arrancan; la Phase 7 avanza igual porque solo consume `tokens.md`.
+  - [x] Se cumplieron todos los DoD de `design-prd.md`.
+  - [x] **Gate humano:** Alex aprobó el canvas. Sin esta aprobación, las Phases 8 y 9 no arrancan; la Phase 7 avanza igual porque solo consume `tokens.md`.
 
 ### Phase 2: Fundación — modelo de datos y andamiaje
 <!-- orchestration:
@@ -169,22 +169,22 @@ file_scope:
 -->
 - **Description:** Esqueleto del backend y esquema completo de la base. Ninguna otra fase de backend arranca sin esto.
 - **Tasks:**
-  - [ ] Task 2.1: `backend/` con FastAPI, `core/config.py` (`pydantic-settings`) y `db/session.py` con `get_session` inyectable. `docker-compose.yml` con PostgreSQL 16.
-  - [ ] Task 2.2: Dependencias en `pyproject.toml`: `fastapi`, `uvicorn`, `sqlalchemy`, `alembic`, `psycopg[binary]`, `pydantic-settings`, `pyjwt`, `argon2-cffi`, `pytest`, `pytest-asyncio`, `httpx`, `mypy`, `ruff`.
-  - [ ] Task 2.4: Modelos: `Team(name, strength CHECK 1..100, crest_url)`, `Season(name, starts_on, ends_on, scoring_config JSONB, status)`, `Round(season_id, number, name, opens_at, closes_at)`.
-  - [ ] Task 2.5: `Match(round_id, home_team_id, away_team_id, kickoff_at TIMESTAMPTZ, status ENUM[SCHEDULED,FINISHED,CANCELLED], home_score, away_score, settled_at)` y `Goal(match_id, team_id, minute, is_stoppage)`.
-  - [ ] Task 2.6: `User(email UNIQUE, password_hash, display_name, phone, contact_email, is_admin, created_at)` y `CreditTransaction(user_id, kind ENUM[SEED,STAKE,PAYOUT,REFUND], amount NUMERIC(12,2), bet_id NULL, created_at)`.
-  - [ ] Task 2.7: `Prediction(user_id, match_id, predicted_home_score, predicted_away_score, points_awarded NULL)` con `UNIQUE(user_id, match_id)`; `Bet(user_id, match_id, market ENUM[OUTCOME,GOAL_BAND], selection JSONB, stake NUMERIC(12,2), odds_snapshot NUMERIC(6,2), status ENUM[PENDING,WON,LOST,VOID], settled_at NULL)`.
-  - [ ] Task 2.8: Migración inicial de Alembic. Índices en `matches(round_id, kickoff_at)`, `bets(match_id, status)`, `credit_transactions(user_id)`.
-  - [ ] Task 2.9: `tests/conftest.py` con fixture de base por test (transacción con rollback) y fixture de cliente HTTP. Sin mocking de la DB.
+  - [x] Task 2.1: `backend/` con FastAPI, `core/config.py` (`pydantic-settings`) y `db/session.py` con `get_session` inyectable. `docker-compose.yml` con PostgreSQL 16.
+  - [x] Task 2.2: Dependencias en `pyproject.toml`: `fastapi`, `uvicorn`, `sqlalchemy`, `alembic`, `psycopg[binary]`, `pydantic-settings`, `pyjwt`, `argon2-cffi`, `pytest`, `pytest-asyncio`, `httpx`, `mypy`, `ruff`.
+  - [x] Task 2.4: Modelos: `Team(name, strength CHECK 1..100, crest_url)`, `Season(name, starts_on, ends_on, scoring_config JSONB, status)`, `Round(season_id, number, name, opens_at, closes_at)`.
+  - [x] Task 2.5: `Match(round_id, home_team_id, away_team_id, kickoff_at TIMESTAMPTZ, status ENUM[SCHEDULED,FINISHED,CANCELLED], home_score, away_score, settled_at)` y `Goal(match_id, team_id, minute, is_stoppage)`.
+  - [x] Task 2.6: `User(email UNIQUE, password_hash, display_name, phone, contact_email, is_admin, created_at)` y `CreditTransaction(user_id, kind ENUM[SEED,STAKE,PAYOUT,REFUND], amount NUMERIC(12,2), bet_id NULL, created_at)`.
+  - [x] Task 2.7: `Prediction(user_id, match_id, predicted_home_score, predicted_away_score, points_awarded NULL)` con `UNIQUE(user_id, match_id)`; `Bet(user_id, match_id, market ENUM[OUTCOME,GOAL_BAND], selection JSONB, stake NUMERIC(12,2), odds_snapshot NUMERIC(6,2), status ENUM[PENDING,WON,LOST,VOID], settled_at NULL)`.
+  - [x] Task 2.8: Migración inicial de Alembic. Índices en `matches(round_id, kickoff_at)`, `bets(match_id, status)`, `credit_transactions(user_id)`.
+  - [x] Task 2.9: `tests/conftest.py` con fixture de base por test (transacción con rollback) y fixture de cliente HTTP. Sin mocking de la DB.
 - **Definition of Done (DoD):**
-  - [ ] `docker compose up -d db && alembic upgrade head` corre limpio desde cero; salida mostrada.
-  - [ ] `alembic downgrade base && alembic upgrade head` es reversible sin error.
-  - [ ] Test: `INSERT` de `Team` con `strength = 0` o `101` es rechazado por el CHECK de la base, no solo por Python.
-  - [ ] Test: `Prediction` duplicado para `(user_id, match_id)` viola el UNIQUE.
-  - [ ] Toda columna de dinero es `NUMERIC(12,2)`: `grep -rn "Float\|DOUBLE" backend/app/models/` no devuelve coincidencias.
-  - [ ] `mypy --strict backend/app` pasa; salida mostrada.
-  - [ ] `pytest backend/tests/models/` pasa con salida real, no un resumen.
+  - [x] `docker compose up -d db && alembic upgrade head` corre limpio desde cero; salida mostrada.
+  - [x] `alembic downgrade base && alembic upgrade head` es reversible sin error.
+  - [x] Test: `INSERT` de `Team` con `strength = 0` o `101` es rechazado por el CHECK de la base, no solo por Python.
+  - [x] Test: `Prediction` duplicado para `(user_id, match_id)` viola el UNIQUE.
+  - [x] Toda columna de dinero es `NUMERIC(12,2)`: `grep -rn "Float\|DOUBLE" backend/app/models/` no devuelve coincidencias.
+  - [x] `mypy --strict backend/app` pasa; salida mostrada.
+  - [x] `pytest backend/tests/models/` pasa con salida real, no un resumen.
 
 ### Phase 3: Motor de momios, franjas y puntuación (puro, tests-first)
 <!-- orchestration:
@@ -197,30 +197,30 @@ file_scope:
 -->
 - **Description:** El corazón del producto: funciones puras sobre tipos estándar y modelos Pydantic `frozen`, sin base de datos ni I/O. **Se escriben los tests primero, se confirma que fallan, se commitean, y luego se implementa.** Corre en paralelo con la Phase 2 porque no importa nada de ella: recibe `int`, `Decimal` y DTOs propios, y define sus propias constantes. Es la única fase que puede escribirse contra un repo vacío.
 - **Tasks:**
-  - [ ] Task 3.1: Escribir `tests/engine/test_odds.py` **antes** de implementar, cubriendo los invariantes de R1.
-  - [ ] Task 3.2: `engine/errors.py` con los errores de dominio: `BettingClosed`, `InsufficientCredits`, `StakeOutOfRange`, `AlreadySettled`, `InvalidSelection`, `NotFound`. Ninguno hereda de `HTTPException` (A4). Viven aquí porque `engine/` es el paquete sin dependencias: todo lo demás puede importarlo.
-  - [ ] Task 3.3: `engine/config.py` con **todas** las constantes de negocio (`HOME_ADVANTAGE`, `DRAW_BASE`, `MARGIN`, `MIN_ODDS`, `SEED_CREDITS`, `MIN_STAKE`, `MAX_STAKE`) y los defaults de `ScoringRules`. Es un módulo puro sin imports del resto de la app, y es la única fuente de esos números.
-  - [ ] Task 3.4: `engine/odds.py`: `compute_odds(strength_home: int, strength_away: int, config: OddsConfig) -> MatchOdds` según R1. `OddsConfig` y `MatchOdds` son Pydantic `frozen=True`.
-  - [ ] Task 3.5: `engine/bands.py`: enum `GoalBand` con las seis franjas de R2 y `band_for_minute(minute: int, is_stoppage: bool) -> GoalBand` (el tiempo añadido cae en `76-90+`).
-  - [ ] Task 3.6: `engine/scoring.py`: `score_prediction(predicted: Score, actual: Score, rules: ScoringRules) -> int` según R8. `ScoringRules.from_config(raw: dict | None) -> ScoringRules` construye las reglas desde el `scoring_config` de la temporada, cayendo a los defaults de `engine/config.py` para cada clave ausente. Es el único puente entre el JSONB y el motor.
-  - [ ] Task 3.7: `engine/resolution.py`: `resolve_bet(bet: BetInput, result: MatchResult) -> BetOutcome`. `BetInput` y `MatchResult` son DTOs propios del motor que el servicio construye a partir de las filas ORM; el motor **nunca** recibe un objeto SQLAlchemy. devolviendo `WON | LOST | VOID` y el pago (`stake * odds_snapshot`, 2 decimales; `0` si pierde; `stake` si `VOID`). Cubre los dos mercados.
-  - [ ] Task 3.8: `engine/rules.py`: `is_open_for_betting(kickoff_at, now) -> bool` (R3) y `validate_stake(stake) -> None` (R5). El `now` siempre entra por parámetro (A2).
-  - [ ] Task 3.9: `engine/selection.py`: modelos Pydantic discriminados por `market` que validan la **forma** de la `selection` — `OUTCOME` acepta `HOME|DRAW|AWAY`; `GOAL_BAND` acepta una de las seis franjas y un `team_id` opcional (UUID o `None`). El motor valida forma, no pertenencia: comprobar que ese `team_id` **juega ese partido** requiere la base y vive en `services/betting.py` (Task 6.4).
-  - [ ] Task 3.10: Barrido de propiedad sobre los 10 000 pares `(1..100, 1..100)`.
+  - [x] Task 3.1: Escribir `tests/engine/test_odds.py` **antes** de implementar, cubriendo los invariantes de R1.
+  - [x] Task 3.2: `engine/errors.py` con los errores de dominio: `BettingClosed`, `InsufficientCredits`, `StakeOutOfRange`, `AlreadySettled`, `InvalidSelection`, `NotFound`. Ninguno hereda de `HTTPException` (A4). Viven aquí porque `engine/` es el paquete sin dependencias: todo lo demás puede importarlo.
+  - [x] Task 3.3: `engine/config.py` con **todas** las constantes de negocio (`HOME_ADVANTAGE`, `DRAW_BASE`, `MARGIN`, `MIN_ODDS`, `SEED_CREDITS`, `MIN_STAKE`, `MAX_STAKE`) y los defaults de `ScoringRules`. Es un módulo puro sin imports del resto de la app, y es la única fuente de esos números.
+  - [x] Task 3.4: `engine/odds.py`: `compute_odds(strength_home: int, strength_away: int, config: OddsConfig) -> MatchOdds` según R1. `OddsConfig` y `MatchOdds` son Pydantic `frozen=True`.
+  - [x] Task 3.5: `engine/bands.py`: enum `GoalBand` con las seis franjas de R2 y `band_for_minute(minute: int, is_stoppage: bool) -> GoalBand` (el tiempo añadido cae en `76-90+`).
+  - [x] Task 3.6: `engine/scoring.py`: `score_prediction(predicted: Score, actual: Score, rules: ScoringRules) -> int` según R8. `ScoringRules.from_config(raw: dict | None) -> ScoringRules` construye las reglas desde el `scoring_config` de la temporada, cayendo a los defaults de `engine/config.py` para cada clave ausente. Es el único puente entre el JSONB y el motor.
+  - [x] Task 3.7: `engine/resolution.py`: `resolve_bet(bet: BetInput, result: MatchResult) -> BetOutcome`. `BetInput` y `MatchResult` son DTOs propios del motor que el servicio construye a partir de las filas ORM; el motor **nunca** recibe un objeto SQLAlchemy. devolviendo `WON | LOST | VOID` y el pago (`stake * odds_snapshot`, 2 decimales; `0` si pierde; `stake` si `VOID`). Cubre los dos mercados.
+  - [x] Task 3.8: `engine/rules.py`: `is_open_for_betting(kickoff_at, now) -> bool` (R3) y `validate_stake(stake) -> None` (R5). El `now` siempre entra por parámetro (A2).
+  - [x] Task 3.9: `engine/selection.py`: modelos Pydantic discriminados por `market` que validan la **forma** de la `selection` — `OUTCOME` acepta `HOME|DRAW|AWAY`; `GOAL_BAND` acepta una de las seis franjas y un `team_id` opcional (UUID o `None`). El motor valida forma, no pertenencia: comprobar que ese `team_id` **juega ese partido** requiere la base y vive en `services/betting.py` (Task 6.4).
+  - [x] Task 3.10: Barrido de propiedad sobre los 10 000 pares `(1..100, 1..100)`.
 - **Definition of Done (DoD):**
-  - [ ] Los tests se commitearon **fallando** antes de la implementación (visible en el historial de git).
-  - [ ] Test: para todo par con `strength_home > strength_away`, `odds_home < odds_away`. Barrido completo de los 10 000 pares, no un caso puntual. **Es el requisito central del producto.**
-  - [ ] Test: `1/odds_home + 1/odds_draw + 1/odds_away > 1.0` en todo el dominio `1..100` (existe margen de la casa). Nota: el clamp `MIN_ODDS` erosiona el margen en los desbalances extremos (`100` vs `1` da ~`1.005`); si el barrido encuentra un caso `<= 1.0`, subir `MIN_ODDS` en vez de relajar el test.
-  - [ ] Test: ningún momio es menor a `1.01`.
-  - [ ] Test: `compute_odds` es determinista — dos llamadas con la misma entrada devuelven objetos iguales.
-  - [ ] Test: marcador exacto acertado otorga `8` puntos con la config default; ganador acertado con marcador errado otorga `3`; ganador errado otorga `0`.
-  - [ ] Test: gol al minuto `90` con `is_stoppage=True` cae en `76-90+`; gol al `46` cae en `46-60`; gol al `45` cae en `31-45`.
-  - [ ] Test: apuesta de franja `0-15` con `team_id` del visitante **pierde** si el único gol de esa franja lo anotó el local.
-  - [ ] Test: `is_open_for_betting` devuelve `False` en el instante exacto de `kickoff_at` (el borde es cerrado).
-  - [ ] Test: `band: "20-40"` es rechazado por el modelo de `selection`. La pertenencia del `team_id` al partido **no** se prueba aquí: es un test de la Phase 6.
-  - [ ] `grep -rnE "sqlalchemy|fastapi|datetime\.now|utcnow|from app\." backend/app/engine/` no devuelve coincidencias — el motor no importa nada del resto de la app (A1, A2), por eso puede construirse en paralelo con la Phase 2.
-  - [ ] Las constantes de negocio existen en un solo archivo: `grep -rn "HOME_ADVANTAGE\|SEED_CREDITS\|MIN_STAKE" backend/app/` solo las define en `engine/config.py`.
-  - [ ] `pytest backend/tests/engine/ -v` pasa en menos de 2 segundos, con PostgreSQL **detenido**; salida mostrada.
+  - [x] Los tests se commitearon **fallando** antes de la implementación (visible en el historial de git).
+  - [x] Test: para todo par con `strength_home > strength_away`, `odds_home < odds_away`. Barrido completo de los 10 000 pares, no un caso puntual. **Es el requisito central del producto.**
+  - [x] Test: `1/odds_home + 1/odds_draw + 1/odds_away > 1.0` en todo el dominio `1..100` (existe margen de la casa). Nota: el clamp `MIN_ODDS` erosiona el margen en los desbalances extremos (`100` vs `1` da ~`1.005`); si el barrido encuentra un caso `<= 1.0`, subir `MIN_ODDS` en vez de relajar el test.
+  - [x] Test: ningún momio es menor a `1.01`.
+  - [x] Test: `compute_odds` es determinista — dos llamadas con la misma entrada devuelven objetos iguales.
+  - [x] Test: marcador exacto acertado otorga `8` puntos con la config default; ganador acertado con marcador errado otorga `3`; ganador errado otorga `0`.
+  - [x] Test: gol al minuto `90` con `is_stoppage=True` cae en `76-90+`; gol al `46` cae en `46-60`; gol al `45` cae en `31-45`.
+  - [x] Test: apuesta de franja `0-15` con `team_id` del visitante **pierde** si el único gol de esa franja lo anotó el local.
+  - [x] Test: `is_open_for_betting` devuelve `False` en el instante exacto de `kickoff_at` (el borde es cerrado).
+  - [x] Test: `band: "20-40"` es rechazado por el modelo de `selection`. La pertenencia del `team_id` al partido **no** se prueba aquí: es un test de la Phase 6.
+  - [x] `grep -rnE "sqlalchemy|fastapi|datetime\.now|utcnow|from app\." backend/app/engine/` no devuelve coincidencias — el motor no importa nada del resto de la app (A1, A2), por eso puede construirse en paralelo con la Phase 2.
+  - [x] Las constantes de negocio existen en un solo archivo: `grep -rn "HOME_ADVANTAGE\|SEED_CREDITS\|MIN_STAKE" backend/app/` solo las define en `engine/config.py`.
+  - [x] `pytest backend/tests/engine/ -v` pasa en menos de 2 segundos, con PostgreSQL **detenido**; salida mostrada.
 
 ### Phase 4: Cuentas, perfil y wallet
 <!-- orchestration:
@@ -243,27 +243,27 @@ file_scope:
 -->
 - **Description:** Registro, login, el perfil donde el usuario captura sus datos de contacto, y el **ledger de créditos**. El wallet va aquí y no en la fase de apuestas a propósito: es la pieza donde un bug significa saldo inventado o desaparecido, y merece sus propios tests aislados de la lógica de juego.
 - **Tasks:**
-  - [ ] Task 4.1: `core/security.py`: hash Argon2, emisión y verificación de JWT, dependencias `require_current_user` y `require_admin`.
-  - [ ] Task 4.2: `app/main.py` con la app FastAPI y `api/exception_handlers.py` con un **único** handler que importa desde `engine/errors.py` que traduce los errores de `engine/errors.py` a HTTP (A4): `BettingClosed → 409`, `InsufficientCredits → 402`, `StakeOutOfRange → 422`, `InvalidSelection → 422`, `AlreadySettled → 409`, `NotFound → 404`.
-  - [ ] Task 4.3: `POST /api/v1/auth/register`, `POST /api/v1/auth/login`, `GET /api/v1/users/me`, `PATCH /api/v1/users/me` (display_name, teléfono, email de contacto).
-  - [ ] Task 4.4: Al registrar, insertar la `CreditTransaction` de tipo `SEED` con `SEED_CREDITS` en la **misma transacción** que el `INSERT` de `User`.
-  - [ ] Task 4.5: `services/wallet.py` — `get_balance(session, user_id) -> Decimal` como `SUM(amount)` del ledger, y `post_transaction(...)`. Es la **única** puerta de escritura al ledger en todo el código.
-  - [ ] Task 4.6: `debit(...)` rechaza si el balance resultante sería negativo, lanzando `InsufficientCredits`. Sin fallback automático ni reintento silencioso.
-  - [ ] Task 4.7: Bloqueo pesimista (`SELECT ... FOR UPDATE` sobre la fila del usuario) al debitar, para que dos apuestas concurrentes no sobregiren.
-  - [ ] Task 4.8: `GET /api/v1/wallet` (balance) y `GET /api/v1/wallet/transactions` (historial paginado).
-  - [ ] Task 4.9: `scripts/create_admin.py` para promover una cuenta a `is_admin`.
+  - [x] Task 4.1: `core/security.py`: hash Argon2, emisión y verificación de JWT, dependencias `require_current_user` y `require_admin`.
+  - [x] Task 4.2: `app/main.py` con la app FastAPI y `api/exception_handlers.py` con un **único** handler que importa desde `engine/errors.py` que traduce los errores de `engine/errors.py` a HTTP (A4): `BettingClosed → 409`, `InsufficientCredits → 402`, `StakeOutOfRange → 422`, `InvalidSelection → 422`, `AlreadySettled → 409`, `NotFound → 404`.
+  - [x] Task 4.3: `POST /api/v1/auth/register`, `POST /api/v1/auth/login`, `GET /api/v1/users/me`, `PATCH /api/v1/users/me` (display_name, teléfono, email de contacto).
+  - [x] Task 4.4: Al registrar, insertar la `CreditTransaction` de tipo `SEED` con `SEED_CREDITS` en la **misma transacción** que el `INSERT` de `User`.
+  - [x] Task 4.5: `services/wallet.py` — `get_balance(session, user_id) -> Decimal` como `SUM(amount)` del ledger, y `post_transaction(...)`. Es la **única** puerta de escritura al ledger en todo el código.
+  - [x] Task 4.6: `debit(...)` rechaza si el balance resultante sería negativo, lanzando `InsufficientCredits`. Sin fallback automático ni reintento silencioso.
+  - [x] Task 4.7: Bloqueo pesimista (`SELECT ... FOR UPDATE` sobre la fila del usuario) al debitar, para que dos apuestas concurrentes no sobregiren.
+  - [x] Task 4.8: `GET /api/v1/wallet` (balance) y `GET /api/v1/wallet/transactions` (historial paginado).
+  - [x] Task 4.9: `scripts/create_admin.py` para promover una cuenta a `is_admin`.
 - **Definition of Done (DoD):**
-  - [ ] Test: registro devuelve `201`; un segundo registro con el mismo email devuelve `409`.
-  - [ ] Test: login válido devuelve un JWT que `GET /users/me` acepta; contraseña errada devuelve `401`; sin token, `401`.
-  - [ ] Test: tras el registro el usuario tiene exactamente una transacción `SEED` y balance `1000.00`.
-  - [ ] Test: si el `INSERT` de `User` falla, no queda ninguna `CreditTransaction` huérfana.
-  - [ ] Test: un usuario sin `is_admin` recibe `403` en un endpoint protegido por `require_admin`.
-  - [ ] Test: `get_balance` sobre `SEED 1000 + STAKE -50 + PAYOUT 150` devuelve exactamente `Decimal("1100.00")`.
-  - [ ] Test: debitar más que el balance lanza `InsufficientCredits`, devuelve `402` y **no** inserta ninguna transacción.
-  - [ ] Test de concurrencia real contra PostgreSQL: dos débitos simultáneos de `600` sobre un balance de `1000` — exactamente uno tiene éxito y el balance nunca queda negativo.
-  - [ ] El `password_hash` no aparece en ninguna respuesta de la API (verificado en test).
-  - [ ] `grep -rnE "UPDATE|DELETE" backend/app/services/wallet.py` no muestra escrituras destructivas sobre `credit_transactions` (R5), y ningún otro módulo escribe en esa tabla.
-  - [ ] `grep -rn "float(" backend/app/services/wallet.py` no devuelve coincidencias.
+  - [x] Test: registro devuelve `201`; un segundo registro con el mismo email devuelve `409`.
+  - [x] Test: login válido devuelve un JWT que `GET /users/me` acepta; contraseña errada devuelve `401`; sin token, `401`.
+  - [x] Test: tras el registro el usuario tiene exactamente una transacción `SEED` y balance `1000.00`.
+  - [ ] Test: si el `INSERT` de `User` falla, no queda ninguna `CreditTransaction` huérfana.  ⟵ **descartado**: decisión explícita de Alex de pasar ligeramente por los tests (prueba de entrevista).
+  - [x] Test: un usuario sin `is_admin` recibe `403` en un endpoint protegido por `require_admin`.
+  - [x] Test: `get_balance` sobre `SEED 1000 + STAKE -50 + PAYOUT 150` devuelve exactamente `Decimal("1100.00")`.
+  - [x] Test: debitar más que el balance lanza `InsufficientCredits`, devuelve `402` y **no** inserta ninguna transacción.
+  - [ ] Test de concurrencia real contra PostgreSQL: dos débitos simultáneos de `600` sobre un balance de `1000` — exactamente uno tiene éxito y el balance nunca queda negativo.  ⟵ **descartado**: decisión explícita de Alex de pasar ligeramente por los tests (prueba de entrevista).
+  - [x] El `password_hash` no aparece en ninguna respuesta de la API (verificado en test).
+  - [x] `grep -rnE "UPDATE|DELETE" backend/app/services/wallet.py` no muestra escrituras destructivas sobre `credit_transactions` (R5), y ningún otro módulo escribe en esa tabla.
+  - [x] `grep -rn "float(" backend/app/services/wallet.py` no devuelve coincidencias.
 
 ### Phase 5: API de administración — catálogo
 <!-- orchestration:
@@ -279,18 +279,18 @@ file_scope:
 -->
 - **Description:** Todo lo que el admin necesita para armar una temporada. La captura de resultados **no** va aquí: vive en la Phase 6 junto a la liquidación, porque son la misma operación transaccional.
 - **Tasks:**
-  - [ ] Task 5.1: CRUD `/api/v1/admin/teams` (con `strength`), `/admin/seasons`, `/admin/rounds`, `/admin/matches`. Todo bajo `require_admin`.
-  - [ ] Task 5.2: `PATCH /api/v1/admin/seasons/{id}/scoring` para editar `scoring_config` (puntos por acierto y momio por franja).
-  - [ ] Task 5.3: `GET /api/v1/admin/teams/{id}/odds-preview?opponent_strength=N` — devuelve los momios que resultarían, para alimentar el slider del panel de admin.
-  - [ ] Task 5.4: Validaciones: los dos equipos de un partido son distintos; `kickoff_at` cae dentro de la ventana de la jornada; `strength` entre 1 y 100.
-  - [ ] Task 5.5: `scripts/seed_demo.py` — una temporada con dos jornadas, ocho equipos con `strength` deliberadamente dispares (p. ej. `92` y `24`) y partidos en el futuro, para que el sistema se pueda navegar de inmediato.
+  - [x] Task 5.1: CRUD `/api/v1/admin/teams` (con `strength`), `/admin/seasons`, `/admin/rounds`, `/admin/matches`. Todo bajo `require_admin`.
+  - [x] Task 5.2: `PATCH /api/v1/admin/seasons/{id}/scoring` para editar `scoring_config` (puntos por acierto y momio por franja).
+  - [x] Task 5.3: `GET /api/v1/admin/teams/{id}/odds-preview?opponent_strength=N` — devuelve los momios que resultarían, para alimentar el slider del panel de admin.
+  - [x] Task 5.4: Validaciones: los dos equipos de un partido son distintos; `kickoff_at` cae dentro de la ventana de la jornada; `strength` entre 1 y 100.
+  - [x] Task 5.5: `scripts/seed_demo.py` — una temporada con dos jornadas, ocho equipos con `strength` deliberadamente dispares (p. ej. `92` y `24`) y partidos en el futuro, para que el sistema se pueda navegar de inmediato.
 - **Definition of Done (DoD):**
-  - [ ] Test: crear un partido con el mismo equipo de local y visitante devuelve `422`.
-  - [ ] Test: crear un partido con `kickoff_at` fuera de la ventana de su jornada devuelve `422`.
-  - [ ] Test: `strength = 0` o `101` devuelve `422`.
-  - [ ] Test: un usuario no-admin recibe `403` en todos los endpoints de `/admin/`.
-  - [ ] Test: `odds-preview` de un equipo con `strength=92` contra `opponent_strength=24` devuelve `odds_home < odds_away`.
-  - [ ] `python backend/scripts/seed_demo.py` corre y deja una temporada navegable; salida mostrada.
+  - [x] Test: crear un partido con el mismo equipo de local y visitante devuelve `422`.
+  - [x] Test: crear un partido con `kickoff_at` fuera de la ventana de su jornada devuelve `422`.
+  - [x] Test: `strength = 0` o `101` devuelve `422`.
+  - [x] Test: un usuario no-admin recibe `403` en todos los endpoints de `/admin/`.
+  - [x] Test: `odds-preview` de un equipo con `strength=92` contra `opponent_strength=24` devuelve `odds_home < odds_away`.
+  - [x] `python backend/scripts/seed_demo.py` corre y deja una temporada navegable; salida mostrada.
 
 ### Phase 6: Juego — pronósticos, apuestas, resultados y liquidación
 <!-- orchestration:

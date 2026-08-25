@@ -1,8 +1,9 @@
-from typing import Any
+from typing import Annotated, Any
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from .config import DEFAULT_SCORING_RULES
+from .errors import InvalidSelection
 
 
 class Score(BaseModel):
@@ -22,14 +23,20 @@ class Score(BaseModel):
 class ScoringRules(BaseModel):
     model_config = ConfigDict(frozen=True)
 
-    outcome: int
-    exact_score: int
-    goal_band: int
+    outcome: Annotated[int, Field(ge=0)]
+    exact_score: Annotated[int, Field(ge=0)]
+    goal_band: Annotated[int, Field(ge=0)]
 
     @classmethod
     def from_config(cls, raw: dict[str, Any] | None) -> "ScoringRules":
-        merged = {**DEFAULT_SCORING_RULES, **(raw or {})}
-        return cls(**merged)
+        """Construye las reglas desde el `scoring_config` JSONB, clave por clave."""
+        known = {k: v for k, v in (raw or {}).items() if k in DEFAULT_SCORING_RULES}
+        try:
+            return cls(**{**DEFAULT_SCORING_RULES, **known})
+        except ValidationError as exc:
+            # El JSONB no está tipado por la base: un valor corrupto tiene que salir
+            # como error de dominio (A4), no como un 500 de Pydantic.
+            raise InvalidSelection(f"scoring_config inválido: {exc.errors()}") from exc
 
 
 def score_prediction(predicted: Score, actual: Score, rules: ScoringRules) -> int:

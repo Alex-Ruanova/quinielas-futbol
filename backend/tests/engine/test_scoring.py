@@ -1,3 +1,6 @@
+import pytest
+
+from app.engine.errors import InvalidSelection
 from app.engine.scoring import Score, ScoringRules, score_prediction
 
 
@@ -31,3 +34,11 @@ def test_from_config_merges_key_by_key() -> None:
     predicted_winner_only = Score(home=5, away=1)
     actual_other_score = Score(home=1, away=0)
     assert score_prediction(predicted_winner_only, actual_other_score, rules) == 3
+
+
+@pytest.mark.parametrize("raw", [{"outcome": "abc"}, {"outcome": -3}])
+def test_from_config_rejects_corrupt_jsonb_as_domain_error(
+    raw: dict[str, object],
+) -> None:
+    with pytest.raises(InvalidSelection):
+        ScoringRules.from_config(raw)
