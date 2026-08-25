@@ -272,10 +272,210 @@ export interface paths {
         patch: operations["update_match_api_v1_admin_matches__match_id__patch"];
         trace?: never;
     };
+    "/api/v1/matches/upcoming": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Upcoming Matches */
+        get: operations["list_upcoming_matches_api_v1_matches_upcoming_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/matches/{match_id}/prediction": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Upsert Prediction */
+        put: operations["upsert_prediction_api_v1_matches__match_id__prediction_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/matches/{match_id}/bets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Place Bet */
+        post: operations["place_bet_api_v1_matches__match_id__bets_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rounds/{round_id}/results": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Round Results */
+        get: operations["get_round_results_api_v1_rounds__round_id__results_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/bets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List My Bets */
+        get: operations["list_my_bets_api_v1_bets_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/seasons/{season_id}/leaderboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Leaderboard */
+        get: operations["get_leaderboard_api_v1_seasons__season_id__leaderboard_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/matches/{match_id}/result": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Record Result */
+        put: operations["record_result_api_v1_admin_matches__match_id__result_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/matches/{match_id}/settle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Settle Match */
+        post: operations["settle_match_api_v1_admin_matches__match_id__settle_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/matches/{match_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel Match */
+        post: operations["cancel_match_api_v1_admin_matches__match_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** BetCreate */
+        BetCreate: {
+            /** Selection */
+            selection: components["schemas"]["OutcomeSelection"] | components["schemas"]["GoalBandSelection"];
+            /** Stake */
+            stake: number | string;
+        };
+        /**
+         * BetMarket
+         * @enum {string}
+         */
+        BetMarket: "OUTCOME" | "GOAL_BAND";
+        /** BetRead */
+        BetRead: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Match Id
+             * Format: uuid
+             */
+            match_id: string;
+            market: components["schemas"]["BetMarket"];
+            /** Selection */
+            selection: {
+                [key: string]: unknown;
+            };
+            /** Stake */
+            stake: string;
+            /** Odds Snapshot */
+            odds_snapshot: string;
+            status: components["schemas"]["BetStatus"];
+            /** Settled At */
+            settled_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /**
+         * BetStatus
+         * @enum {string}
+         */
+        BetStatus: "PENDING" | "WON" | "LOST" | "VOID";
         /**
          * CreditTransactionKind
          * @enum {string}
@@ -315,10 +515,64 @@ export interface components {
          * @enum {string}
          */
         GoalBand: "0-15" | "16-30" | "31-45" | "46-60" | "61-75" | "76-90+";
+        /** GoalBandSelection */
+        GoalBandSelection: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            market: "GOAL_BAND";
+            band: components["schemas"]["GoalBand"];
+            /** Team Id */
+            team_id?: string | null;
+        };
+        /** GoalIn */
+        GoalIn: {
+            /**
+             * Team Id
+             * Format: uuid
+             */
+            team_id: string;
+            /** Minute */
+            minute: number;
+            /**
+             * Is Stoppage
+             * @default false
+             */
+            is_stoppage: boolean;
+        };
+        /** GoalRead */
+        GoalRead: {
+            /**
+             * Team Id
+             * Format: uuid
+             */
+            team_id: string;
+            /** Minute */
+            minute: number;
+            /** Is Stoppage */
+            is_stoppage: boolean;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** LeaderboardEntryRead */
+        LeaderboardEntryRead: {
+            /**
+             * User Id
+             * Format: uuid
+             */
+            user_id: string;
+            /** Display Name */
+            display_name: string;
+            /** Points */
+            points: number;
+            /** Exact Scores */
+            exact_scores: number;
+            /** Balance */
+            balance: string;
         };
         /** MatchCreate */
         MatchCreate: {
@@ -378,11 +632,81 @@ export interface components {
             /** Settled At */
             settled_at: string | null;
         };
+        /** MatchResultRead */
+        MatchResultRead: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Home Team Id
+             * Format: uuid
+             */
+            home_team_id: string;
+            /**
+             * Away Team Id
+             * Format: uuid
+             */
+            away_team_id: string;
+            status: components["schemas"]["MatchStatus"];
+            /** Home Score */
+            home_score: number | null;
+            /** Away Score */
+            away_score: number | null;
+            /** Goals */
+            goals: components["schemas"]["GoalRead"][];
+        };
         /**
          * MatchStatus
          * @enum {string}
          */
         MatchStatus: "SCHEDULED" | "FINISHED" | "CANCELLED";
+        /** MatchUpcomingRead */
+        MatchUpcomingRead: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Round Id
+             * Format: uuid
+             */
+            round_id: string;
+            /**
+             * Home Team Id
+             * Format: uuid
+             */
+            home_team_id: string;
+            /**
+             * Away Team Id
+             * Format: uuid
+             */
+            away_team_id: string;
+            /** Home Team Name */
+            home_team_name: string;
+            /** Away Team Name */
+            away_team_name: string;
+            /**
+             * Kickoff At
+             * Format: date-time
+             */
+            kickoff_at: string;
+            /** Odds Home */
+            odds_home: string;
+            /** Odds Draw */
+            odds_draw: string;
+            /** Odds Away */
+            odds_away: string;
+            /** Goal Band Odds */
+            goal_band_odds: {
+                [key: string]: string;
+            };
+            my_prediction: components["schemas"]["PredictionRead"] | null;
+            /** My Bets */
+            my_bets: components["schemas"]["BetRead"][];
+        };
         /** MatchUpdate */
         MatchUpdate: {
             /** Round Id */
@@ -403,6 +727,57 @@ export interface components {
             odds_draw: string;
             /** Odds Away */
             odds_away: string;
+        };
+        /** OutcomeSelection */
+        OutcomeSelection: {
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            market: "OUTCOME";
+            /**
+             * Pick
+             * @enum {string}
+             */
+            pick: "HOME" | "DRAW" | "AWAY";
+        };
+        /** PredictionIn */
+        PredictionIn: {
+            /** Predicted Home Score */
+            predicted_home_score: number;
+            /** Predicted Away Score */
+            predicted_away_score: number;
+        };
+        /** PredictionRead */
+        PredictionRead: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Match Id
+             * Format: uuid
+             */
+            match_id: string;
+            /** Predicted Home Score */
+            predicted_home_score: number;
+            /** Predicted Away Score */
+            predicted_away_score: number;
+            /** Points Awarded */
+            points_awarded: number | null;
+        };
+        /** ResultIn */
+        ResultIn: {
+            /** Home Score */
+            home_score: number;
+            /** Away Score */
+            away_score: number;
+            /**
+             * Goals
+             * @default []
+             */
+            goals: components["schemas"]["GoalIn"][];
         };
         /** RoundCreate */
         RoundCreate: {
@@ -1498,6 +1873,282 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["MatchRead"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_upcoming_matches_api_v1_matches_upcoming_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchUpcomingRead"][];
+                };
+            };
+        };
+    };
+    upsert_prediction_api_v1_matches__match_id__prediction_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                match_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PredictionIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PredictionRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    place_bet_api_v1_matches__match_id__bets_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                match_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BetCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BetRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_round_results_api_v1_rounds__round_id__results_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                round_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchResultRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_my_bets_api_v1_bets_get: {
+        parameters: {
+            query?: {
+                status?: components["schemas"]["BetStatus"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BetRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_leaderboard_api_v1_seasons__season_id__leaderboard_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                season_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeaderboardEntryRead"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    record_result_api_v1_admin_matches__match_id__result_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                match_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResultIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MatchResultRead"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    settle_match_api_v1_admin_matches__match_id__settle_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                match_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_match_api_v1_admin_matches__match_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                match_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
