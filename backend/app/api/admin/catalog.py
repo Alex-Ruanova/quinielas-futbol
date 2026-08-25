@@ -1,11 +1,10 @@
 from typing import Annotated
 from uuid import UUID
 
-# Phase 4 (parallel) owns app.core.security; absent in this worktree until merge.
-from app.core.security import require_admin  # type: ignore[import-untyped]
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
+from app.core.security import require_admin
 from app.db.session import get_session
 from app.schemas.catalog import (
     MatchCreate,
