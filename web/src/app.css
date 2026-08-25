@@ -1,0 +1,116 @@
+@import 'tailwindcss';
+@config '../tailwind.config.ts';
+
+/*
+ * Fuente de la verdad: docs/quinielas-futbol/design/tokens.md
+ * :root = valores del tema oscuro (default). [data-theme="dark"] los repite de forma
+ * explícita para cuando el toggle fija el atributo. [data-theme="light"] sobreescribe
+ * solo lo que tokens.md redefine para el tema claro; lo que no redefine hereda del root
+ * (mismo hex documentado, sin colores inventados).
+ */
+:root,
+[data-theme='dark'] {
+	--color-surface-0: #0b0f0d;
+	--color-surface-1: #121815;
+	--color-surface-2: #18201c;
+	--color-surface-3: #1e2620;
+	--color-border: #263029;
+	--color-border-strong: #3a473f;
+	--color-text: #f2f5f2;
+	--color-text-muted: #9aa79e;
+	--color-text-faint: #5f6b62;
+	--color-accent: #c8ff4d;
+	--color-accent-hover: #e4ff9b;
+	--color-accent-ink: #0b0f0d;
+	--color-accent-ink-soft: #3b5209;
+	--color-accent-text: #c8ff4d;
+
+	--color-status-pending: #e9b949;
+	--color-status-won-bg: #35d07f;
+	--color-status-won-text: #08170e;
+	--color-status-lost: #f2545b;
+	--color-status-lost-text: #ff8a8f;
+	--color-status-void: #7e8a81;
+	--color-status-void-text: #9aa79e;
+	--color-positive: #35d07f;
+	--color-negative: #f2545b;
+	--color-urgent: #e9b949;
+	--color-urgent-surface: #1e1b14;
+	--color-focus: #c8ff4d;
+
+	--shadow-elev-1: 0 1px 2px rgba(11, 15, 13, 0.4);
+	--shadow-elev-2: 0 8px 24px rgba(11, 15, 13, 0.45);
+	--shadow-elev-urgent:
+		0 0 0 1px rgba(233, 185, 73, 0.25), 0 12px 32px rgba(233, 185, 73, 0.08);
+}
+
+[data-theme='light'] {
+	--color-surface-0: #f4f6f1;
+	--color-surface-1: #ffffff;
+	--color-surface-2: #e7ebe2;
+	--color-border: #dde3d8;
+	--color-text: #11170f;
+	--color-text-muted: #556053;
+	--color-accent-text: #2d6a1e;
+
+	--color-status-pending: #8a6410;
+	--color-status-won-bg: #137a47;
+	--color-status-won-text: #ffffff;
+	--color-status-lost: #b7202a;
+	--color-status-lost-text: #b7202a;
+	--color-status-void: #6b7469;
+	--color-status-void-text: #6b7469;
+	--color-positive: #137a47;
+	--color-negative: #b7202a;
+	--color-urgent-surface: #fff7e2;
+	--color-focus: #2d6a1e;
+
+	--shadow-elev-1: 0 1px 2px rgba(17, 23, 15, 0.06);
+	--shadow-elev-2: 0 8px 24px rgba(17, 23, 15, 0.06);
+}
+
+@layer base {
+	* {
+		border-color: var(--color-border);
+	}
+
+	html {
+		color-scheme: dark;
+		font-family: Archivo, system-ui, sans-serif;
+	}
+
+	[data-theme='light'] {
+		color-scheme: light;
+	}
+
+	body {
+		background: var(--color-surface-0);
+		color: var(--color-text);
+	}
+
+	:focus-visible {
+		outline: 2px solid var(--color-focus);
+		outline-offset: 2px;
+	}
+}
+
+.num {
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: 'tnum' 1;
+}
+
+@keyframes pulseUrgent {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.45;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.animate-pulse-urgent {
+		animation: none !important;
+	}
+}
