@@ -21,3 +21,6 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# El default local no es secreto y SvelteKit lo exige para compilar.
+!.env

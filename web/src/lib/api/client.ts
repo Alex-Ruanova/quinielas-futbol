@@ -1,12 +1,14 @@
 import createClient from 'openapi-fetch';
+import { PUBLIC_API_URL } from '$env/static/public';
 import { browser } from '$app/environment';
 import { goto } from '$app/navigation';
 import { session } from '$lib/stores/session.svelte';
 import type { paths } from './schema';
 
-/* En produccion la API vive en otro host que la SPA, asi que la URL se inyecta
- * en build. `PUBLIC_` es el prefijo que SvelteKit expone al bundle del cliente. */
-export const API_BASE_URL = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8000';
+/* En produccion la API vive en otro host que la SPA, asi que la URL se inyecta en
+ * build. Tiene que venir de `$env/static/public`: `import.meta.env` solo expone
+ * variables con prefijo VITE_, no las PUBLIC_ de SvelteKit. */
+export const API_BASE_URL = PUBLIC_API_URL;
 
 export type ApiErrorStatus = 401 | 402 | 409 | 422 | 0;
 
