@@ -1,4 +1,4 @@
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -22,5 +22,5 @@ class GoalBandSelection(BaseModel):
 
 
 Selection = Annotated[
-    Union[OutcomeSelection, GoalBandSelection], Field(discriminator="market")
+    OutcomeSelection | GoalBandSelection, Field(discriminator="market")
 ]

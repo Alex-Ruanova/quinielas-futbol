@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
 import pytest
@@ -8,12 +8,12 @@ from app.engine.rules import is_open_for_betting, validate_stake
 
 
 def test_is_open_for_betting_is_false_at_exact_kickoff() -> None:
-    kickoff_at = datetime(2026, 1, 1, 18, 0, tzinfo=timezone.utc)
+    kickoff_at = datetime(2026, 1, 1, 18, 0, tzinfo=UTC)
     assert is_open_for_betting(kickoff_at, now=kickoff_at) is False
 
 
 def test_is_open_for_betting_is_true_before_kickoff() -> None:
-    kickoff_at = datetime(2026, 1, 1, 18, 0, tzinfo=timezone.utc)
+    kickoff_at = datetime(2026, 1, 1, 18, 0, tzinfo=UTC)
     now = kickoff_at - timedelta(minutes=1)
     assert is_open_for_betting(kickoff_at, now=now) is True
 

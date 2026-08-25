@@ -10,7 +10,11 @@ def test_favorite_home_has_lower_odds_full_sweep() -> None:
         for strength_away in range(1, 101):
             odds = compute_odds(strength_home, strength_away, config)
             if strength_home > strength_away:
-                assert odds.odds_home < odds.odds_away, (strength_home, strength_away, odds)
+                assert odds.odds_home < odds.odds_away, (
+                    strength_home,
+                    strength_away,
+                    odds,
+                )
 
 
 def test_house_margin_positive_full_sweep() -> None:
@@ -23,7 +27,12 @@ def test_house_margin_positive_full_sweep() -> None:
                 + Decimal(1) / odds.odds_draw
                 + Decimal(1) / odds.odds_away
             )
-            assert implied > Decimal("1.0"), (strength_home, strength_away, odds, implied)
+            assert implied > Decimal("1.0"), (
+                strength_home,
+                strength_away,
+                odds,
+                implied,
+            )
 
 
 def test_no_odds_below_minimum_full_sweep() -> None:

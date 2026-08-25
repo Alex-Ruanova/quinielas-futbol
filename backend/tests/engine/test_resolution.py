@@ -29,7 +29,6 @@ def test_goal_band_bet_on_away_team_loses_when_home_scores_in_band() -> None:
 
 def test_goal_band_bet_wins_when_specified_team_scores_in_band() -> None:
     home_id = uuid4()
-    away_id = uuid4()
 
     bet = BetInput(
         selection=GoalBandSelection(band=GoalBand.MIN_0_15, team_id=home_id),

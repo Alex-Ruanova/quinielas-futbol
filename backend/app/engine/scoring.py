@@ -1,3 +1,5 @@
+from typing import Any
+
 from pydantic import BaseModel, ConfigDict
 
 from .config import DEFAULT_SCORING_RULES
@@ -25,7 +27,7 @@ class ScoringRules(BaseModel):
     goal_band: int
 
     @classmethod
-    def from_config(cls, raw: dict | None) -> "ScoringRules":
+    def from_config(cls, raw: dict[str, Any] | None) -> "ScoringRules":
         merged = {**DEFAULT_SCORING_RULES, **(raw or {})}
         return cls(**merged)
 

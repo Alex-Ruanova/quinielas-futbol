@@ -31,7 +31,9 @@ def _odds_from_probability(probability: float, config: OddsConfig) -> Decimal:
     return max(config.min_odds, raw)
 
 
-def compute_odds(strength_home: int, strength_away: int, config: OddsConfig) -> MatchOdds:
+def compute_odds(
+    strength_home: int, strength_away: int, config: OddsConfig
+) -> MatchOdds:
     sh = strength_home * (1 + config.home_advantage)
     sa = float(strength_away)
 

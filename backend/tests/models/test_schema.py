@@ -8,7 +8,9 @@ from app.models import Goal, Match, MatchStatus, Prediction, Round, Season, Team
 
 
 def _make_season(session: Session) -> Season:
-    season = Season(name="Liga MX 2026", starts_on=date(2026, 1, 1), ends_on=date(2026, 12, 1))
+    season = Season(
+        name="Liga MX 2026", starts_on=date(2026, 1, 1), ends_on=date(2026, 12, 1)
+    )
     session.add(season)
     session.flush()
     return season
@@ -35,14 +37,18 @@ def _make_team(session: Session, name: str, strength: int) -> Team:
 
 
 @pytest.mark.parametrize("strength", [0, 101])
-def test_team_strength_check_constraint_rejects_out_of_range(session: Session, strength: int) -> None:
+def test_team_strength_check_constraint_rejects_out_of_range(
+    session: Session, strength: int
+) -> None:
     team = Team(name="Equipo Invalido", strength=strength)
     session.add(team)
     with pytest.raises(IntegrityError):
         session.flush()
 
 
-def test_prediction_duplicate_user_match_violates_unique_constraint(session: Session) -> None:
+def test_prediction_duplicate_user_match_violates_unique_constraint(
+    session: Session,
+) -> None:
     season = _make_season(session)
     round_ = _make_round(session, season)
     home = _make_team(session, "Local", 80)
@@ -58,15 +64,31 @@ def test_prediction_duplicate_user_match_violates_unique_constraint(session: Ses
     session.add(user)
     session.flush()
 
-    session.add(Prediction(user_id=user.id, match_id=match.id, predicted_home_score=1, predicted_away_score=0))
+    session.add(
+        Prediction(
+            user_id=user.id,
+            match_id=match.id,
+            predicted_home_score=1,
+            predicted_away_score=0,
+        )
+    )
     session.flush()
 
-    session.add(Prediction(user_id=user.id, match_id=match.id, predicted_home_score=2, predicted_away_score=1))
+    session.add(
+        Prediction(
+            user_id=user.id,
+            match_id=match.id,
+            predicted_home_score=2,
+            predicted_away_score=1,
+        )
+    )
     with pytest.raises(IntegrityError):
         session.flush()
 
 
-def test_match_with_teams_and_goals_persists_and_rereads_with_correct_types(session: Session) -> None:
+def test_match_with_teams_and_goals_persists_and_rereads_with_correct_types(
+    session: Session,
+) -> None:
     season = _make_season(session)
     round_ = _make_round(session, season)
     home = _make_team(session, "Local", 90)

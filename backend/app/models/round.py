@@ -11,7 +11,9 @@ from app.db.base import Base
 class Round(Base):
     __tablename__ = "rounds"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     season_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), ForeignKey("seasons.id"), nullable=False
     )
