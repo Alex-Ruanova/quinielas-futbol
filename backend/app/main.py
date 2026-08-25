@@ -1,11 +1,36 @@
 import importlib
+import os
 
 from fastapi import APIRouter, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.exception_handlers import register_exception_handlers
 
 app = FastAPI(title="Quinielas de Futbol")
 register_exception_handlers(app)
+
+# En produccion la SPA vive en otro origen que la API (nexutest vs nexutest-api),
+# asi que sin esto el navegador bloquea toda llamada autenticada.
+_CORS_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGIN", "http://localhost:5173").split(",")
+    if origin.strip()
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+@app.get("/healthz", tags=["ops"])
+def healthz() -> dict[str, str]:
+    """Liveness para el healthCheck del task de ECS."""
+    return {"status": "ok"}
+
 
 _ROUTER_MODULES = [
     "app.api.auth",

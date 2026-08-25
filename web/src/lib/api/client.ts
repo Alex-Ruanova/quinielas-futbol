@@ -4,7 +4,9 @@ import { goto } from '$app/navigation';
 import { session } from '$lib/stores/session.svelte';
 import type { paths } from './schema';
 
-export const API_BASE_URL = 'http://localhost:8010';
+/* En produccion la API vive en otro host que la SPA, asi que la URL se inyecta
+ * en build. `PUBLIC_` es el prefijo que SvelteKit expone al bundle del cliente. */
+export const API_BASE_URL = import.meta.env.PUBLIC_API_URL ?? 'http://localhost:8000';
 
 export type ApiErrorStatus = 401 | 402 | 409 | 422 | 0;
 

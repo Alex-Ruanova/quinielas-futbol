@@ -13,3 +13,16 @@ build/
 dist/
 .env
 *.egg-info/
+
+# Terraform
+infra/.terraform/
+infra/*.tfstate
+infra/*.tfstate.*
+infra/.terraform.lock.hcl
+infra/terraform.tfvars
+
+# Cloudflare
+.cloudflare-token
+
+# Worktrees y estado local del agente
+.claude/

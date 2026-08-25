@@ -1,0 +1,6 @@
+budget_email = "tu@correo.com"
+
+# Opcionales (los defaults ya apuntan a nexutest.norvaru.com):
+# subdomain        = "nexutest"
+# domain           = "norvaru.com"
+# budget_limit_usd = 50
