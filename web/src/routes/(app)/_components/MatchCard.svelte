@@ -78,10 +78,18 @@
 			['EMPATE', match.odds_draw],
 			[match.away_team_name.slice(0, 3).toUpperCase(), match.odds_away]
 		] as [label, odds] (label)}
-			<div class="num flex flex-1 flex-col gap-0.5 rounded-xl border border-border-strong bg-surface-1 px-3 py-2.5">
+			<!-- Clicable a proposito: un chip con aspecto de boton que no responde
+			     hace creer que la apuesta esta rota. Abre el detalle, que es donde
+			     se apuesta de verdad. -->
+			<button
+				type="button"
+				onclick={ontoggle}
+				disabled={uiState === 'cerrado' || uiState === 'liquidado'}
+				class="num flex flex-1 flex-col gap-0.5 rounded-xl border border-border-strong bg-surface-1 px-3 py-2.5 text-left transition-colors enabled:hover:border-accent enabled:hover:bg-surface-2 disabled:cursor-default"
+			>
 				<span class="text-label uppercase text-text-muted">{label}</span>
 				<span class="text-num-md text-text">{Number(odds).toFixed(2)}</span>
-			</div>
+			</button>
 		{/each}
 	</div>
 
@@ -106,7 +114,13 @@
 			Pronóstico: <span class="text-text">{predictionLabel}</span>
 		</span>
 		<span class="text-body-sm font-bold text-accent">
-			{expanded ? 'Ocultar detalle ↑' : 'Franja de gol →'}
+			{#if expanded}
+				Ocultar detalle ↑
+			{:else if uiState === 'cerrado' || uiState === 'liquidado'}
+				Ver detalle →
+			{:else}
+				Pronosticar y apostar →
+			{/if}
 		</span>
 	</button>
 
