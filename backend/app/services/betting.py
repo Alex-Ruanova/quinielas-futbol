@@ -4,7 +4,7 @@ from decimal import Decimal
 from typing import Any
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
 
 from app.engine.bands import GoalBand
 from app.engine.config import DEFAULT_GOAL_BAND_ODDS
@@ -124,6 +124,38 @@ def list_bets(
     if status is not None:
         stmt = stmt.where(Bet.status == status)
     return list(session.scalars(stmt))
+
+
+def list_bets_with_match(
+    session: Session, user_id: uuid.UUID, status: BetStatus | None = None
+) -> list[tuple[Bet, Match, str, str]]:
+    """Apuestas del usuario con el contexto del partido, incluidos los ya liquidados.
+
+    `/matches/upcoming` solo devuelve partidos futuros, asi que el historial no
+    tiene de donde sacar los nombres de los equipos sin este join.
+    """
+    home = aliased(Team)
+    away = aliased(Team)
+    stmt = (
+        select(Bet, Match, home.name, away.name)
+        .join(Match, Match.id == Bet.match_id)
+        .join(home, home.id == Match.home_team_id)
+        .join(away, away.id == Match.away_team_id)
+        .where(Bet.user_id == user_id)
+        .order_by(Bet.created_at.desc())
+    )
+    if status is not None:
+        stmt = stmt.where(Bet.status == status)
+    return [(b, m, h, a) for b, m, h, a in session.execute(stmt)]
+
+
+def list_seasons(session: Session) -> list[Season]:
+    """Temporadas visibles para cualquier usuario autenticado.
+
+    El leaderboard necesita un `season_id` y `/admin/seasons` exige is_admin,
+    asi que sin esto un jugador normal no puede llegar a su propia tabla.
+    """
+    return list(session.scalars(select(Season).order_by(Season.starts_on.desc())))
 
 
 def upsert_prediction(

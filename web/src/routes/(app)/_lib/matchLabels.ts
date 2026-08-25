@@ -27,7 +27,11 @@ export function rememberMatches(matches: MatchUpcoming[]): void {
 	}
 }
 
-export function matchLabel(matchId: string): string {
+export function matchLabel(
+	matchId: string,
+	embedded?: { home_team_name: string; away_team_name: string } | null
+): string {
+	if (embedded) return `${embedded.home_team_name} – ${embedded.away_team_name}`;
 	const entry = cache.get(matchId);
 	if (!entry) return `Partido ${matchId.slice(0, 8)}`;
 	return `${entry.homeTeamName} – ${entry.awayTeamName}`;

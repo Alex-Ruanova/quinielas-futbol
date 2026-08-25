@@ -28,6 +28,14 @@
 
 	<div class="flex items-center gap-3">
 		{#if session.isAuthenticated}
+			<a href="/partidos" class="text-body-sm font-semibold text-text-muted hover:text-accent">
+				Partidos
+			</a>
+			{#if session.user?.isAdmin}
+				<a href="/admin" class="text-body-sm font-semibold text-text-muted hover:text-accent">
+					Admin
+				</a>
+			{/if}
 			<Money value={session.balance ?? 0} class="text-num-md" />
 			<a href="/perfil" class="text-body-sm font-semibold text-text-muted hover:text-accent">
 				{session.user?.displayName}

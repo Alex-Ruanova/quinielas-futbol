@@ -213,7 +213,12 @@ def odds_preview(strength_home: int, strength_away: int) -> MatchOdds:
 
 
 def team_odds_preview(
-    session: Session, team_id: UUID, opponent_strength: int
+    session: Session, team_id: UUID, opponent_strength: int, strength: int | None = None
 ) -> MatchOdds:
+    """`strength` simula una fuerza sin persistirla: el slider del panel previsualiza
+    antes de guardar, y cambiar `team.strength` altera los momios en vivo de todos
+    los partidos abiertos."""
     team = get_team(session, team_id)
-    return odds_preview(team.strength, opponent_strength)
+    return odds_preview(
+        strength if strength is not None else team.strength, opponent_strength
+    )

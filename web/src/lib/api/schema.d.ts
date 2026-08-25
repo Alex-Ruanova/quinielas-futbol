@@ -4,6 +4,26 @@
  */
 
 export interface paths {
+    "/healthz": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Healthz
+         * @description Liveness para el healthCheck del task de ECS.
+         */
+        get: operations["healthz_healthz_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/register": {
         parameters: {
             query?: never;
@@ -357,6 +377,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/seasons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Seasons
+         * @description Lectura publica del catalogo de temporadas: el leaderboard necesita un id.
+         */
+        get: operations["list_seasons_api_v1_seasons_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/seasons/{season_id}/leaderboard": {
         parameters: {
             query?: never;
@@ -441,6 +481,26 @@ export interface components {
          * @enum {string}
          */
         BetMarket: "OUTCOME" | "GOAL_BAND";
+        /**
+         * BetMatchRead
+         * @description Contexto del partido que acompana a cada apuesta del historial.
+         */
+        BetMatchRead: {
+            /** Home Team Name */
+            home_team_name: string;
+            /** Away Team Name */
+            away_team_name: string;
+            /**
+             * Kickoff At
+             * Format: date-time
+             */
+            kickoff_at: string;
+            status: components["schemas"]["MatchStatus"];
+            /** Home Score */
+            home_score: number | null;
+            /** Away Score */
+            away_score: number | null;
+        };
         /** BetRead */
         BetRead: {
             /**
@@ -476,6 +536,37 @@ export interface components {
          * @enum {string}
          */
         BetStatus: "PENDING" | "WON" | "LOST" | "VOID";
+        /** BetWithMatchRead */
+        BetWithMatchRead: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Match Id
+             * Format: uuid
+             */
+            match_id: string;
+            market: components["schemas"]["BetMarket"];
+            /** Selection */
+            selection: {
+                [key: string]: unknown;
+            };
+            /** Stake */
+            stake: string;
+            /** Odds Snapshot */
+            odds_snapshot: string;
+            status: components["schemas"]["BetStatus"];
+            /** Settled At */
+            settled_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            match: components["schemas"]["BetMatchRead"];
+        };
         /**
          * CreditTransactionKind
          * @enum {string}
@@ -900,6 +991,28 @@ export interface components {
             /** Status */
             status: string;
         };
+        /** SeasonSummaryRead */
+        SeasonSummaryRead: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Status */
+            status: string;
+            /**
+             * Starts On
+             * Format: date
+             */
+            starts_on: string;
+            /**
+             * Ends On
+             * Format: date
+             */
+            ends_on: string;
+        };
         /** SeasonUpdate */
         SeasonUpdate: {
             /** Name */
@@ -1032,6 +1145,28 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    healthz_healthz_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: string;
+                    };
+                };
+            };
+        };
+    };
     register_user_api_v1_auth_register_post: {
         parameters: {
             query?: never;
@@ -1355,6 +1490,7 @@ export interface operations {
         parameters: {
             query: {
                 opponent_strength: number;
+                strength?: number | null;
             };
             header?: never;
             path: {
@@ -2023,7 +2159,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["BetRead"][];
+                    "application/json": components["schemas"]["BetWithMatchRead"][];
                 };
             };
             /** @description Validation Error */
@@ -2033,6 +2169,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_seasons_api_v1_seasons_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeasonSummaryRead"][];
                 };
             };
         };

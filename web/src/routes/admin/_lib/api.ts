@@ -36,11 +36,19 @@ export function updateTeam(teamId: string, body: TeamUpdate): Promise<Team> {
 	);
 }
 
-/** Momio real calculado por el motor del backend contra `opponent_strength`; nunca replicado en cliente. */
-export function oddsPreview(teamId: string, opponentStrength: number): Promise<OddsPreview> {
+/** Momio real calculado por el motor del backend contra `opponent_strength`; nunca replicado en cliente.
+ * `strength` simula una fuerza sin guardarla, para que el slider previsualice sin escribir en la base. */
+export function oddsPreview(
+	teamId: string,
+	opponentStrength: number,
+	strength?: number
+): Promise<OddsPreview> {
 	return apiCall(
 		client.GET('/api/v1/admin/teams/{team_id}/odds-preview', {
-			params: { path: { team_id: teamId }, query: { opponent_strength: opponentStrength } }
+			params: {
+				path: { team_id: teamId },
+				query: { opponent_strength: opponentStrength, strength }
+			}
 		})
 	);
 }

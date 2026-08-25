@@ -3,13 +3,12 @@
 	import Button from '$lib/components/Button.svelte';
 	import Money from '$lib/components/Money.svelte';
 	import StatusBadge from '$lib/components/StatusBadge.svelte';
-	import { listMyBets } from '../_api/bets';
-	import type { BetRead } from '../_api/matches';
+	import { listMyBets, type BetWithMatch } from '../_api/bets';
 	import { describeSelection, marketLabel, payoutFor } from '../_lib/betDisplay';
 	import { matchLabel } from '../_lib/matchLabels';
 	import EmptyState from '../_components/EmptyState.svelte';
 
-	let bets = $state<BetRead[]>([]);
+	let bets = $state<BetWithMatch[]>([]);
 	let loading = $state(true);
 	let loadError = $state<ApiError | null>(null);
 
@@ -68,7 +67,7 @@
 					class="grid grid-cols-[1fr_repeat(3,minmax(0,80px))] items-center gap-3 border-b border-border/60 px-4 py-3 text-body-sm last:border-b-0 md:grid-cols-[1fr_100px_80px_90px_100px]"
 				>
 					<div class="flex flex-col">
-						<span class="font-semibold text-text">{matchLabel(bet.match_id)}</span>
+						<span class="font-semibold text-text">{matchLabel(bet.match_id, bet.match)}</span>
 						<span class="text-caption text-text-faint">{marketLabel(bet)}</span>
 					</div>
 					<span class="hidden text-right text-text-muted md:block">{describeSelection(bet)}</span>

@@ -88,18 +88,17 @@
 		const teamId = selectedId;
 		if (debounceTimer) clearTimeout(debounceTimer);
 		debounceTimer = setTimeout(() => {
-			void applyStrengthLive(teamId, value);
+			void previewStrength(teamId, value);
 		}, DEBOUNCE_MS);
 	}
 
-	/** La fuerza se persiste al soltar el slider para que el momio en vivo venga siempre del motor real. */
-	async function applyStrengthLive(teamId: string, strength: number) {
+	/** Solo previsualiza: mover el slider no puede escribir en la base, porque
+	 * `team.strength` alimenta los momios en vivo de todos los partidos abiertos. */
+	async function previewStrength(teamId: string, strength: number) {
 		previewLoading = true;
 		previewError = '';
 		try {
-			const updated = await updateTeam(teamId, { strength });
-			teams = teams.map((team) => (team.id === teamId ? updated : team));
-			preview = await oddsPreview(teamId, REFERENCE_STRENGTH);
+			preview = await oddsPreview(teamId, REFERENCE_STRENGTH, strength);
 		} catch (error) {
 			previewError =
 				error instanceof ApiError ? error.message : 'No se pudo calcular el momio en vivo.';

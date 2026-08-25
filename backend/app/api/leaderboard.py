@@ -6,12 +6,25 @@ from sqlalchemy.orm import Session
 
 from app.core.security import require_current_user
 from app.db.session import get_session
-from app.schemas.betting import LeaderboardEntryRead
+from app.schemas.betting import LeaderboardEntryRead, SeasonSummaryRead
+from app.services import betting as betting_service
 from app.services import leaderboard as leaderboard_service
 
 router = APIRouter(prefix="/api/v1/seasons", tags=["leaderboard"])
 
 SessionDep = Annotated[Session, Depends(get_session)]
+
+
+@router.get("", response_model=list[SeasonSummaryRead])
+def list_seasons(
+    session: SessionDep,
+    _: Annotated[object, Depends(require_current_user)],
+) -> list[SeasonSummaryRead]:
+    """Lectura publica del catalogo de temporadas: el leaderboard necesita un id."""
+    return [
+        SeasonSummaryRead.model_validate(s)
+        for s in betting_service.list_seasons(session)
+    ]
 
 
 @router.get("/{season_id}/leaderboard", response_model=list[LeaderboardEntryRead])

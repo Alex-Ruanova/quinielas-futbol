@@ -69,8 +69,11 @@ def team_odds_preview(
     team_id: UUID,
     session: SessionDep,
     opponent_strength: Annotated[int, Query(ge=1, le=100)],
+    strength: Annotated[int | None, Query(ge=1, le=100)] = None,
 ) -> OddsPreview:
-    odds = catalog_service.team_odds_preview(session, team_id, opponent_strength)
+    odds = catalog_service.team_odds_preview(
+        session, team_id, opponent_strength, strength
+    )
     return OddsPreview.model_validate(odds, from_attributes=True)
 
 

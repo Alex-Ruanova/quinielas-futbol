@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 from typing import Annotated
 from uuid import UUID
@@ -98,3 +98,28 @@ class LeaderboardEntryRead(BaseModel):
     points: int
     exact_scores: int
     balance: Decimal
+
+
+class BetMatchRead(BaseModel):
+    """Contexto del partido que acompana a cada apuesta del historial."""
+
+    home_team_name: str
+    away_team_name: str
+    kickoff_at: datetime
+    status: MatchStatus
+    home_score: int | None
+    away_score: int | None
+
+
+class BetWithMatchRead(BetRead):
+    match: BetMatchRead
+
+
+class SeasonSummaryRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    name: str
+    status: str
+    starts_on: date
+    ends_on: date
