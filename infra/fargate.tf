@@ -38,6 +38,7 @@ resource "aws_iam_role_policy" "task_execution_secrets" {
       Resource = [
         aws_secretsmanager_secret.database_url.arn,
         aws_secretsmanager_secret.jwt_secret.arn,
+        aws_secretsmanager_secret.admin_password.arn,
         aws_secretsmanager_secret.tunnel_token.arn,
       ]
     }]
@@ -62,11 +63,15 @@ resource "aws_ecs_task_definition" "backend" {
     environment = [
       { name = "PORT", value = tostring(var.backend_port) },
       { name = "CORS_ORIGIN", value = "https://${local.app_hostname}" },
+      { name = "SEED_DEMO", value = var.seed_demo ? "1" : "0" },
+      { name = "ADMIN_EMAIL", value = var.admin_email },
+      { name = "ADMIN_DISPLAY_NAME", value = "Administrador" },
     ]
 
     secrets = [
       { name = "DATABASE_URL", valueFrom = aws_secretsmanager_secret.database_url.arn },
       { name = "JWT_SECRET", valueFrom = aws_secretsmanager_secret.jwt_secret.arn },
+      { name = "ADMIN_PASSWORD", valueFrom = aws_secretsmanager_secret.admin_password.arn },
     ]
 
     # startPeriod generoso: el entrypoint corre `alembic upgrade head` antes de

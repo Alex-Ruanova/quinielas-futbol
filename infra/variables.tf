@@ -36,3 +36,15 @@ variable "budget_limit_usd" {
   type    = number
   default = 50
 }
+
+variable "seed_demo" {
+  description = "El contenedor siembra la temporada de demo y el admin al arrancar."
+  type        = bool
+  default     = true
+}
+
+variable "admin_email" {
+  description = "Cuenta de administrador creada en el primer arranque"
+  type        = string
+  default     = "admin@nexutest.norvaru.com"
+}

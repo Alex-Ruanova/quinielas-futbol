@@ -28,3 +28,12 @@ output "database_url_secret" {
   description = "Nombre del secreto con la DATABASE_URL de produccion"
   value       = aws_secretsmanager_secret.database_url.name
 }
+
+output "admin_email" {
+  value = var.admin_email
+}
+
+output "admin_password_secret" {
+  description = "Lee la contrasena con: aws secretsmanager get-secret-value --secret-id <esto>"
+  value       = aws_secretsmanager_secret.admin_password.name
+}

@@ -27,8 +27,11 @@ resource "aws_db_instance" "main" {
   vpc_security_group_ids = [aws_security_group.rds.id]
   publicly_accessible    = false
 
-  backup_retention_period = 7
-  skip_final_snapshot     = true # MVP: sin snapshot final al destruir
+  # Despliegue efimero (24 h): sin backups automaticos ni snapshot final, para
+  # que `terraform destroy` no deje nada cobrando ni bloquee el borrado.
+  backup_retention_period = 0
+  skip_final_snapshot     = true
+  deletion_protection     = false
   apply_immediately       = true
 }
 
@@ -57,4 +60,21 @@ resource "aws_secretsmanager_secret" "jwt_secret" {
 resource "aws_secretsmanager_secret_version" "jwt_secret" {
   secret_id     = aws_secretsmanager_secret.jwt_secret.id
   secret_string = random_password.jwt_secret.result
+}
+
+# Administrador inicial. La RDS es privada, asi que no se puede sembrar desde
+# fuera de la VPC: el contenedor se autoabastece al arrancar (SEED_DEMO=1).
+resource "random_password" "admin" {
+  length  = 20
+  special = false
+}
+
+resource "aws_secretsmanager_secret" "admin_password" {
+  name                    = "${var.project}/admin-password"
+  recovery_window_in_days = 0
+}
+
+resource "aws_secretsmanager_secret_version" "admin_password" {
+  secret_id     = aws_secretsmanager_secret.admin_password.id
+  secret_string = random_password.admin.result
 }

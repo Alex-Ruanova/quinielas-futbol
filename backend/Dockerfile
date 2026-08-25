@@ -1,6 +1,10 @@
-# Build desde la raiz del repo: docker build -f backend/Dockerfile backend/
+# Build desde backend/: docker build -f backend/Dockerfile backend/
+#
+# Las dos etapas usan /app como WORKDIR a proposito: `uv sync` escribe rutas
+# absolutas en los shebangs del venv, asi que construir en /src y copiar a /app
+# deja `#!/src/.venv/bin/python` y ningun ejecutable arranca.
 FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim AS build
-WORKDIR /src
+WORKDIR /app
 
 ENV UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy \
@@ -21,7 +25,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends wget \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --from=build /src /app
+COPY --from=build /app /app
 ENV PATH="/app/.venv/bin:$PATH"
 
 RUN chmod +x /app/entrypoint.sh \
