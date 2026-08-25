@@ -1,12 +1,12 @@
 from collections.abc import AsyncGenerator, Generator
 
 import pytest
-from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import Connection
 from sqlalchemy.orm import Session
 
-from app.db.session import SessionLocal, engine
+from app.db.session import SessionLocal, engine, get_session
+from app.main import app
 
 
 @pytest.fixture()
@@ -24,9 +24,14 @@ def session() -> Generator[Session]:
 
 
 @pytest.fixture()
-async def client() -> AsyncGenerator[AsyncClient]:
-    # Placeholder app until app/main.py (out of this phase's file_scope) wires real routers.
-    app = FastAPI()
+async def client(session: Session) -> AsyncGenerator[AsyncClient]:
+    def _get_session_override() -> Generator[Session]:
+        yield session
+
+    app.dependency_overrides[get_session] = _get_session_override
     transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://test") as ac:
-        yield ac
+    try:
+        async with AsyncClient(transport=transport, base_url="http://test") as ac:
+            yield ac
+    finally:
+        app.dependency_overrides.pop(get_session, None)
